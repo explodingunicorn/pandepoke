@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import Image from "next/image";
 import NextLink from "next/link";
 import {
   Box,
@@ -12,7 +11,6 @@ import {
   Flex,
   SimpleGrid,
   Link,
-  Button,
   Image as ChakraImage,
 } from "@chakra-ui/react";
 
