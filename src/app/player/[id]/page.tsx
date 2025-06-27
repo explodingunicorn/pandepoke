@@ -53,7 +53,7 @@ export default function PlayerPage() {
       if (!error && data) {
         console.log(data);
         setResults(
-          data.map((result: any) => ({
+          data.map((result: Result) => ({
             ...result,
             deck_archetype_1: result.deck_archetype_1 ? result.deck_archetype_1 : null,
             deck_archetype_2: result.deck_archetype_2 ? result.deck_archetype_2 : null,
