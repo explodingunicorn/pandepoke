@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 import { Provider } from "@/components/ui/provider"
-import Link from "next/link";
+import { SubmissionHeader } from "@/components/SubmissionHeader";
 
 export default function RootLayout({
   children,
@@ -15,11 +15,7 @@ export default function RootLayout({
       </head>
       <body style={{ background: '#fff', minHeight: '100vh' }}>
         <Provider>
-          <header style={{ width: '100%', background: '#fff', boxShadow: '0 2px 8px #f0f1f2', padding: '1rem 0', marginBottom: '2rem' }}>
-            <div style={{ maxWidth: '640px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Link href="/" style={{ fontSize: '1.25rem', fontWeight: 700, color: '#222' }}>PandePoke Rankings</Link>
-            </div>
-          </header>
+          <SubmissionHeader />
           {children}
         </Provider>
       </body>

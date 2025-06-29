@@ -1,0 +1,235 @@
+{
+  "metaDecks": [
+    {
+      "id": 1,
+      "name": "Gardevoir ex",
+      "rank": 1,
+      "pokemon": [
+        {
+          "name": "Gardevoir ex",
+          "pokedex_number": 282,
+          "variant": "ex"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 2,
+      "name": "Raging Bolt Ogerpon",
+      "rank": 2,
+      "pokemon": [
+        {
+          "name": "Raging Bolt",
+          "pokedex_number": 1021
+        },
+        {
+          "name": "Wellspring Ogerpon",
+          "pokedex_number": 1017,
+          "form": "Wellspring Mask"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 3,
+      "name": "Grimmsnarl Froslass",
+      "rank": 3,
+      "pokemon": [
+        {
+          "name": "Grimmsnarl",
+          "pokedex_number": 861
+        },
+        {
+          "name": "Froslass",
+          "pokedex_number": 478
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 4,
+      "name": "Dragapult Charizard",
+      "rank": 4,
+      "pokemon": [
+        {
+          "name": "Dragapult ex",
+          "pokedex_number": 887,
+          "variant": "ex"
+        },
+        {
+          "name": "Charizard ex",
+          "pokedex_number": 6,
+          "variant": "ex"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 5,
+      "name": "Dragapult Dusknoir",
+      "rank": 5,
+      "pokemon": [
+        {
+          "name": "Dragapult ex",
+          "pokedex_number": 887,
+          "variant": "ex"
+        },
+        {
+          "name": "Dusknoir",
+          "pokedex_number": 477
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 6,
+      "name": "Flareon Noctowl",
+      "rank": 6,
+      "pokemon": [
+        {
+          "name": "Flareon",
+          "pokedex_number": 136
+        },
+        {
+          "name": "Noctowl",
+          "pokedex_number": 164
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 7,
+      "name": "Dragapult ex",
+      "rank": 7,
+      "pokemon": [
+        {
+          "name": "Dragapult ex",
+          "pokedex_number": 887,
+          "variant": "ex"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 8,
+      "name": "Joltik Box",
+      "rank": 8,
+      "pokemon": [
+        {
+          "name": "Joltik",
+          "pokedex_number": 595
+        },
+        {
+          "name": "Pikachu",
+          "pokedex_number": 25
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 9,
+      "name": "Gholdengo ex",
+      "rank": 9,
+      "pokemon": [
+        {
+          "name": "Gholdengo ex",
+          "pokedex_number": 1000,
+          "variant": "ex"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 10,
+      "name": "Gholdengo Dragapult",
+      "rank": 10,
+      "pokemon": [
+        {
+          "name": "Gholdengo ex",
+          "pokedex_number": 1000,
+          "variant": "ex"
+        },
+        {
+          "name": "Dragapult ex",
+          "pokedex_number": 887,
+          "variant": "ex"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 11,
+      "name": "N's Zoroark ex",
+      "rank": 11,
+      "pokemon": [
+        {
+          "name": "N's Zoroark ex",
+          "pokedex_number": 571,
+          "variant": "N's ex"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 12,
+      "name": "Toedscruel Ogerpon",
+      "rank": 12,
+      "pokemon": [
+        {
+          "name": "Toedscruel",
+          "pokedex_number": 948
+        },
+        {
+          "name": "Wellspring Ogerpon",
+          "pokedex_number": 1017,
+          "form": "Wellspring Mask"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 13,
+      "name": "Cynthia's Garchomp ex",
+      "rank": 13,
+      "pokemon": [
+        {
+          "name": "Cynthia's Garchomp ex",
+          "pokedex_number": 445,
+          "variant": "Cynthia's ex"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 14,
+      "name": "Charizard Pidgeot",
+      "rank": 14,
+      "pokemon": [
+        {
+          "name": "Charizard ex",
+          "pokedex_number": 6,
+          "variant": "ex"
+        },
+        {
+          "name": "Pidgeot ex",
+          "pokedex_number": 18,
+          "variant": "ex"
+        }
+      ],
+      "is_active": true
+    },
+    {
+      "id": 15,
+      "name": "Ceruledge ex",
+      "rank": 15,
+      "pokemon": [
+        {
+          "name": "Ceruledge ex",
+          "pokedex_number": 937,
+          "variant": "ex"
+        }
+      ],
+      "is_active": true
+    }
+  ]
+}
