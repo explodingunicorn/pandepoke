@@ -21,7 +21,10 @@ envLines.forEach(line => {
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 async function checkTables() {
-  console.log('Checking existing tables and data...');
+  console.log('🔍 Checking existing tables and data...\n');
+  
+  let tablesFound = 0;
+  let tablesWithErrors = 0;
   
   // Check player table
   console.log('\n--- Player table ---');
@@ -31,9 +34,12 @@ async function checkTables() {
     .limit(5);
   
   if (playerError) {
-    console.log('Player table error:', playerError);
+    console.error('❌ Player table error:', playerError.message);
+    tablesWithErrors++;
   } else {
-    console.log('Player table exists. Sample data:', players);
+    console.log('✅ Player table exists');
+    console.log('Sample data:', players?.slice(0, 3) || 'No data found');
+    tablesFound++;
   }
 
   // Check result table
@@ -44,9 +50,12 @@ async function checkTables() {
     .limit(5);
   
   if (resultError) {
-    console.log('Result table error:', resultError);
+    console.error('❌ Result table error:', resultError.message);
+    tablesWithErrors++;
   } else {
-    console.log('Result table exists. Sample data:', results);
+    console.log('✅ Result table exists');
+    console.log('Sample data:', results?.slice(0, 3) || 'No data found');
+    tablesFound++;
   }
 
   // Try to find deck archetype tables
@@ -61,10 +70,29 @@ async function checkTables() {
       .limit(1);
     
     if (!error) {
-      console.log(`✓ Table '${tableName}' exists:`, data);
+      console.log(`✅ Table '${tableName}' exists`);
+      if (data && data.length > 0) {
+        console.log(`   Records found: ${data.length}`);
+      } else {
+        console.log('   No records found');
+      }
+      tablesFound++;
     } else {
-      console.log(`✗ Table '${tableName}' does not exist or has error:`, error.message);
+      console.log(`❌ Table '${tableName}' does not exist or has error: ${error.message}`);
+      tablesWithErrors++;
     }
+  }
+  
+  console.log('\n📊 Database Check Summary:');
+  console.log(`✅ Tables accessible: ${tablesFound}`);
+  console.log(`❌ Tables with errors: ${tablesWithErrors}`);
+  
+  if (tablesWithErrors === 0) {
+    console.log('\n🎉 All database checks passed!');
+    process.exit(0);
+  } else {
+    console.log('\n⚠️  Some database issues detected. Check the errors above.');
+    process.exit(1);
   }
 }
 

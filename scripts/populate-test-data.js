@@ -97,7 +97,10 @@ const weekDates = getWeekDates();
 
 async function populateDatabase() {
   try {
-    console.log('Starting database population...');
+    console.log('🌱 Starting database population...\n');
+    
+    let totalInserted = 0;
+    let totalErrors = 0;
 
     // Step 1: Insert deck archetypes
     console.log('Inserting deck archetypes...');
@@ -107,9 +110,11 @@ async function populateDatabase() {
         .insert(archetype);
       
       if (error) {
-        console.log(`Error inserting archetype ${archetype.Name}:`, error);
+        console.error(`❌ Error inserting archetype ${archetype.Name}:`, error.message);
+        totalErrors++;
       } else {
-        console.log(`✓ Inserted archetype: ${archetype.Name}`);
+        console.log(`✅ Inserted archetype: ${archetype.Name}`);
+        totalInserted++;
       }
     }
 
@@ -121,9 +126,11 @@ async function populateDatabase() {
         .insert(archetype);
       
       if (error) {
-        console.log(`Error inserting archetype ${archetype.Name} into deck_archetype_2:`, error);
+        console.error(`❌ Error inserting archetype ${archetype.Name} into deck_archetype_2:`, error.message);
+        totalErrors++;
       } else {
-        console.log(`✓ Inserted archetype into deck_archetype_2: ${archetype.Name}`);
+        console.log(`✅ Inserted archetype into deck_archetype_2: ${archetype.Name}`);
+        totalInserted++;
       }
     }
 
@@ -135,9 +142,11 @@ async function populateDatabase() {
         .insert(player);
       
       if (error) {
-        console.log(`Error inserting player ${player.name}:`, error);
+        console.error(`❌ Error inserting player ${player.name}:`, error.message);
+        totalErrors++;
       } else {
-        console.log(`✓ Inserted player: ${player.name}`);
+        console.log(`✅ Inserted player: ${player.name}`);
+        totalInserted++;
       }
     }
 
@@ -174,17 +183,30 @@ async function populateDatabase() {
           .insert(result);
         
         if (error) {
-          console.log(`Error inserting result for ${player.name}:`, error);
+          console.error(`❌ Error inserting result for ${player.name}:`, error.message);
+          totalErrors++;
         } else {
-          console.log(`✓ Inserted result: ${player.name} - ${wins}W/${losses}L/${ties}T`);
+          console.log(`✅ Inserted result: ${player.name} - ${wins}W/${losses}L/${ties}T`);
+          totalInserted++;
         }
       }
     }
 
-    console.log('Database population completed successfully!');
+    console.log('\n📊 Population Summary:');
+    console.log(`✅ Successfully inserted: ${totalInserted} records`);
+    console.log(`❌ Errors encountered: ${totalErrors} records`);
+    
+    if (totalErrors === 0) {
+      console.log('\n🎉 Database population completed successfully!');
+      process.exit(0);
+    } else {
+      console.log('\n⚠️  Database population completed with some errors.');
+      process.exit(1);
+    }
     
   } catch (error) {
-    console.error('Error populating database:', error);
+    console.error('\n💥 Fatal error during database population:', error.message);
+    process.exit(1);
   }
 }
 

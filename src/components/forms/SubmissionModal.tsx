@@ -122,8 +122,7 @@ export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
       } else {
         setSubmitError(result.error || "An error occurred while submitting your record");
       }
-    } catch (error) {
-      console.error("Submission error:", error);
+    } catch {
       setSubmitError("An unexpected error occurred. Please try again.");
     }
   };

@@ -6,7 +6,12 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup:db": "node scripts/create-tables.js",
+    "seed:test": "node scripts/populate-test-data.js",
+    "check:db": "node scripts/check-tables.js",
+    "update:sprites": "node scripts/update-sprites.js",
+    "update:meta": "node scripts/update-to-current-meta.js"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.21.0",

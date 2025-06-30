@@ -47,11 +47,24 @@ export function SubmissionHeader() {
           
           <Button
             onClick={handleOpenModal}
-            variant="ghost"
+            variant="unstyled"
             fontWeight={700}
             fontSize="1.25rem"
             color="#222"
-            _hover={{}}
+            _hover={{
+              background: "transparent",
+              transform: "none",
+              boxShadow: "none"
+            }}
+            _active={{
+              background: "transparent",
+              transform: "none",
+              boxShadow: "none"
+            }}
+            _focus={{
+              background: "transparent",
+              boxShadow: "none"
+            }}
             padding={0}
             height="auto"
           >
