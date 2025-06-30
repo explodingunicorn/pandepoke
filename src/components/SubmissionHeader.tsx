@@ -47,7 +47,7 @@ export function SubmissionHeader() {
           
           <Button
             onClick={handleOpenModal}
-            variant="unstyled"
+            variant="ghost"
             fontWeight={700}
             fontSize="1.25rem"
             color="#222"
