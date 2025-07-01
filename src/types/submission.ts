@@ -79,6 +79,7 @@ export interface SubmissionFormData {
   selectedDeck: number | "other" | "";
   /** Selected custom Pokemon (when selectedDeck is "other") */
   customPokemon?: PokemonVariant[];
+  password: string;
 }
 
 export interface SubmissionValidationErrors {
@@ -89,6 +90,7 @@ export interface SubmissionValidationErrors {
   ties?: string;
   deck?: string;
   general?: string;
+  password?: string;
 }
 
 export interface DatabaseInsertResult {

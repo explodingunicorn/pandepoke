@@ -29,6 +29,7 @@ export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
     losses: 0,
     ties: 0,
     selectedDeck: "",
+    password: '',
   });
 
   const [displayWins, setDisplayWins] = useState<string>("");
@@ -84,6 +85,11 @@ export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
       newErrors.deck = "Please select at least one Pokemon that defines your custom deck";
     }
 
+    // Password validation
+    if (!formData.password || formData.password.trim().length === 0) {
+      newErrors.password = "Password is required";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -109,6 +115,7 @@ export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
           losses: 0,
           ties: 0,
           selectedDeck: "",
+          password: "",
         });
         setDisplayWins("");
         setDisplayLosses("");
@@ -350,6 +357,26 @@ export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
             onCustomPokemonChange={(customPokemon) => setFormData(prev => ({ ...prev, customPokemon }))}
             error={errors.deck}
           />
+
+          {/* Password input at the bottom of the form */}
+          <Box>
+            <Text fontSize="sm" fontWeight="medium" mb={2} color={errors.password ? "red.500" : "black"}>
+              Password *
+            </Text>
+            <Input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+              placeholder="Enter password"
+              borderColor={errors.password ? "red.500" : "gray.200"}
+              color="black"
+              _placeholder={{ color: "gray.500" }}
+              autoComplete="current-password"
+            />
+            {errors.password && (
+              <Text color="red.500" fontSize="xs" mt={1}>{errors.password}</Text>
+            )}
+          </Box>
         </VStack>
 
         <HStack justifyContent="flex-end" mt={6}>
