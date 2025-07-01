@@ -9,6 +9,7 @@ import {
   Image,
   Button,
 } from "@chakra-ui/react";
+import { getSpriteUrl } from "@/utils/pokemon";
 import metaDecksData from "@/data/meta-decks.json";
 import type { MetaDeck } from "@/types/submission";
 
@@ -21,10 +22,6 @@ interface CustomDropdownProps {
 export function CustomDropdown({ selectedDeck, onDeckChange, error }: CustomDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [metaDecks] = useState<MetaDeck[]>(metaDecksData.metaDecks);
-
-  const getSpriteUrl = (pokedexNumber: number): string => {
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokedexNumber}.png`;
-  };
 
   const getSelectedDisplayText = (): string => {
     if (selectedDeck === "other") {
@@ -44,7 +41,6 @@ export function CustomDropdown({ selectedDeck, onDeckChange, error }: CustomDrop
 
   return (
     <Box position="relative">
-      {/* Dropdown Trigger */}
       <Button
         variant="outline"
         width="100%"
@@ -65,7 +61,6 @@ export function CustomDropdown({ selectedDeck, onDeckChange, error }: CustomDrop
         <Text>{isOpen ? "▲" : "▼"}</Text>
       </Button>
 
-      {/* Dropdown Menu */}
       {isOpen && (
         <Box
           position="absolute"
@@ -82,7 +77,6 @@ export function CustomDropdown({ selectedDeck, onDeckChange, error }: CustomDrop
           overflowY="auto"
         >
           <VStack gap={0} align="stretch">
-            {/* Default option */}
             <Button
               variant="ghost"
               width="100%"
@@ -101,7 +95,6 @@ export function CustomDropdown({ selectedDeck, onDeckChange, error }: CustomDrop
               <Text fontSize="16px">Select your deck...</Text>
             </Button>
 
-            {/* Meta deck options */}
             {metaDecks
               .filter(deck => deck.is_active)
               .sort((a, b) => a.rank - b.rank)
@@ -140,7 +133,6 @@ export function CustomDropdown({ selectedDeck, onDeckChange, error }: CustomDrop
                 </Button>
               ))}
 
-            {/* Other option */}
             <Button
               variant="ghost"
               width="100%"
@@ -163,7 +155,6 @@ export function CustomDropdown({ selectedDeck, onDeckChange, error }: CustomDrop
         </Box>
       )}
 
-      {/* Click outside to close */}
       {isOpen && (
         <Box
           position="fixed"

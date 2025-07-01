@@ -1,27 +1,47 @@
 const { createClient } = require('@supabase/supabase-js');
-
-// Read environment variables directly from .env.local
 const fs = require('fs');
 const path = require('path');
 
-const envPath = path.join(__dirname, '..', '.env.local');
-const envContent = fs.readFileSync(envPath, 'utf8');
-const envLines = envContent.split('\n');
-
-let supabaseUrl, supabaseAnonKey;
-envLines.forEach(line => {
-  const [key, value] = line.split('=');
-  if (key === 'NEXT_PUBLIC_SUPABASE_URL') {
-    supabaseUrl = value;
-  } else if (key === 'NEXT_PUBLIC_SUPABASE_ANON_KEY') {
-    supabaseAnonKey = value;
+function loadEnvironmentVariables() {
+  try {
+    const envPath = path.join(__dirname, '..', '.env.local');
+    
+    if (!fs.existsSync(envPath)) {
+      throw new Error('.env.local file not found. Please create it with your Supabase credentials.');
+    }
+    
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    const envLines = envContent.split('\n');
+    
+    let supabaseUrl, supabaseAnonKey;
+    envLines.forEach(line => {
+      const [key, value] = line.split('=');
+      if (key === 'NEXT_PUBLIC_SUPABASE_URL') {
+        supabaseUrl = value?.trim();
+      } else if (key === 'NEXT_PUBLIC_SUPABASE_ANON_KEY') {
+        supabaseAnonKey = value?.trim();
+      }
+    });
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Missing required environment variables. Please check your .env.local file.');
+    }
+    
+    return { supabaseUrl, supabaseAnonKey };
+  } catch (error) {
+    console.error('❌ Environment Error:', error.message);
+    process.exit(1);
   }
-});
+}
 
+const { supabaseUrl, supabaseAnonKey } = loadEnvironmentVariables();
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 async function createTables() {
-  console.log('Creating database tables...');
+  console.log('🏗️  Creating database tables...\n');
+  
+  let successCount = 0;
+  let errorCount = 0;
 
   try {
     // Create deck_archetype_1 table
@@ -37,9 +57,11 @@ async function createTables() {
     });
     
     if (deck1Error) {
-      console.log('Error creating deck_archetype_1:', deck1Error);
+      console.error('❌ Error creating deck_archetype_1:', deck1Error.message);
+      errorCount++;
     } else {
-      console.log('✓ deck_archetype_1 table created');
+      console.log('✅ deck_archetype_1 table created successfully');
+      successCount++;
     }
 
     // Create deck_archetype_2 table
@@ -55,9 +77,11 @@ async function createTables() {
     });
     
     if (deck2Error) {
-      console.log('Error creating deck_archetype_2:', deck2Error);
+      console.error('❌ Error creating deck_archetype_2:', deck2Error.message);
+      errorCount++;
     } else {
-      console.log('✓ deck_archetype_2 table created');
+      console.log('✅ deck_archetype_2 table created successfully');
+      successCount++;
     }
 
     // Create player table
@@ -72,9 +96,11 @@ async function createTables() {
     });
     
     if (playerError) {
-      console.log('Error creating player:', playerError);
+      console.error('❌ Error creating player table:', playerError.message);
+      errorCount++;
     } else {
-      console.log('✓ player table created');
+      console.log('✅ player table created successfully');
+      successCount++;
     }
 
     // Create result table
@@ -95,15 +121,28 @@ async function createTables() {
     });
     
     if (resultError) {
-      console.log('Error creating result:', resultError);
+      console.error('❌ Error creating result table:', resultError.message);
+      errorCount++;
     } else {
-      console.log('✓ result table created');
+      console.log('✅ result table created successfully');
+      successCount++;
     }
 
-    console.log('Database schema creation completed!');
+    console.log('\n📊 Summary:');
+    console.log(`✅ Successfully created: ${successCount} tables`);
+    console.log(`❌ Errors encountered: ${errorCount} tables`);
+    
+    if (errorCount === 0) {
+      console.log('\n🎉 Database schema creation completed successfully!');
+      process.exit(0);
+    } else {
+      console.log('\n⚠️  Database schema creation completed with errors.');
+      process.exit(1);
+    }
 
   } catch (error) {
-    console.error('Error creating tables:', error);
+    console.error('\n💥 Fatal error during table creation:', error.message);
+    process.exit(1);
   }
 }
 

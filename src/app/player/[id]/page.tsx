@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 import NextLink from "next/link";
 import {
   Box,
@@ -13,10 +13,6 @@ import {
   Link,
   Image as ChakraImage,
 } from "@chakra-ui/react";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface Result {
   id: number;
@@ -36,7 +32,6 @@ export default function PlayerPage() {
 
   useEffect(() => {
     async function fetchResults() {
-      // Fetch player name
       const { data: playerData } = await supabase
         .from("player")
         .select("name")
@@ -44,14 +39,12 @@ export default function PlayerPage() {
         .single();
       setPlayerName(playerData?.name || "");
 
-      // Fetch results with joined pokemon data
       const { data, error } = await supabase
         .from("result")
         .select(`*, deck_archetype_1 (image_url, Name), deck_archetype_2 (image_url, Name)`)
         .eq("player_id", id)
         .order("week_start", { ascending: false });
       if (!error && data) {
-        console.log(data);
         setResults(
           data.map((result: Result) => ({
             ...result,

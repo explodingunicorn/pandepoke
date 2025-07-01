@@ -1,17 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
 import type { SubmissionFormData, DatabaseInsertResult } from "@/types/submission";
 import type { PlayerApiResponse, ResultApiResponse } from "@/types/api";
+import { supabase } from "@/lib/supabase";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-/**
- * Custom hook for submitting tournament records to the database
- */
 export function useSubmitRecord() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -204,8 +197,7 @@ export function useSubmitRecord() {
         result_id: resultResponse.result_id
       };
 
-    } catch (error) {
-      console.error('Unexpected error in submitRecord:', error);
+    } catch {
       return {
         success: false,
         error: "An unexpected error occurred. Please try again.",

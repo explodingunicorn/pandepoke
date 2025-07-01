@@ -11,6 +11,8 @@ import {
   Input,
   Badge,
 } from "@chakra-ui/react";
+import { POKEMON_API_BASE, POKEMON_SEARCH_LIMIT, POKEMON_RESULTS_LIMIT, MAX_POKEMON_SELECTION, POKEMON_PER_GENERATION, SEARCH_DEBOUNCE_MS } from "@/lib/constants";
+import { getSpriteUrl } from "@/utils/pokemon";
 import type { PokemonVariant } from "@/types/submission";
 
 interface Pokemon {
@@ -38,11 +40,9 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
 
     setIsLoading(true);
     try {
-      // Search using PokeAPI
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1500`);
+      const response = await fetch(`${POKEMON_API_BASE}/pokemon?limit=${POKEMON_SEARCH_LIMIT}`);
       const data = await response.json();
       
-      // Filter out cosmetic variants that don't affect TCG gameplay
       const cosmeticVariants = [
         'rock-star', 'belle', 'popstar', 'phd', 'libre', 'cosplay',
         'battle-bond', 'ash-', 'cap', 'partner', 'spiky-eared',
@@ -57,7 +57,7 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
           const isCosmetic = cosmeticVariants.some(variant => name.includes(variant));
           return matchesQuery && !isCosmetic;
         })
-        .slice(0, 20); // Limit to 20 results for performance
+        .slice(0, POKEMON_RESULTS_LIMIT);
 
       const pokemonWithDetails = await Promise.all(
         filteredPokemon.map(async (pokemon: { name: string; url: string }) => {
@@ -68,19 +68,18 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
             return {
               name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
               pokedex_number: detail.id,
-              sprite_url: detail.sprites.front_default || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${detail.id}.png`,
+              sprite_url: detail.sprites.front_default || getSpriteUrl(detail.id),
               types: detail.types.map((type: { type: { name: string } }) => type.type.name)
             };
-          } catch (error) {
-            console.error(`Error fetching details for ${pokemon.name}:`, error);
+          } catch {
             return null;
           }
         })
       );
 
       setSearchResults(pokemonWithDetails.filter(Boolean).sort((a, b) => a.pokedex_number - b.pokedex_number));
-    } catch (error) {
-      console.error("Error searching Pokemon:", error);
+    } catch {
+      setSearchResults([]);
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +88,7 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
       searchPokemon(searchQuery);
-    }, 300);
+    }, SEARCH_DEBOUNCE_MS);
 
     return () => clearTimeout(debounceTimer);
   }, [searchQuery]);
@@ -98,7 +97,7 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
     return selectedPokemon.some(p => p.pokedex_number === pokemon.pokedex_number);
   };
 
-  const canAddMore = selectedPokemon.length < 2;
+  const canAddMore = selectedPokemon.length < MAX_POKEMON_SELECTION;
 
   const handleAddPokemon = (pokemon: Pokemon) => {
     if (!isSelected(pokemon) && canAddMore) {
@@ -106,7 +105,7 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
         name: pokemon.name,
         base_name: pokemon.name,
         pokedex_number: pokemon.pokedex_number,
-        generation: Math.ceil(pokemon.pokedex_number / 151), // Rough generation calculation
+        generation: Math.ceil(pokemon.pokedex_number / POKEMON_PER_GENERATION),
         types: pokemon.types,
         sprite_url: pokemon.sprite_url,
         is_competitive: false
@@ -127,10 +126,9 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
   return (
     <Box>
       <Text fontSize="sm" color="black" mb={2} fontWeight="medium">
-        Selected Pokemon ({selectedPokemon.length}/2) - Choose any Pokemon that define your deck
+        Selected Pokemon ({selectedPokemon.length}/{MAX_POKEMON_SELECTION}) - Choose any Pokemon that define your deck
       </Text>
       
-      {/* Selected Pokemon Display */}
       {selectedPokemon.length > 0 && (
         <VStack gap={2} mb={4}>
           {selectedPokemon.map((pokemon, index) => (
@@ -183,12 +181,11 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
         </VStack>
       )}
 
-      {/* Add Pokemon Search */}
       {canAddMore && (
         <VStack gap={3} align="stretch">
           {selectedPokemon.length > 0 && (
             <Text fontSize="sm" color="black" fontWeight="medium">
-              Add Another Pokemon ({2 - selectedPokemon.length} remaining)
+              Add Another Pokemon ({MAX_POKEMON_SELECTION - selectedPokemon.length} remaining)
             </Text>
           )}
           
@@ -204,7 +201,6 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
             <Text fontSize="sm" color="gray.600">Searching...</Text>
           )}
 
-          {/* Search Results */}
           {searchResults.length > 0 && (
             <Box
               maxHeight="200px"
