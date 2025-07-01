@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:init": "supabase init",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.21.0",
@@ -30,6 +33,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
+    "supabase": "^2.26.9",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
