@@ -94,8 +94,8 @@ export function useSubmitRecord() {
 
       let primaryPokemon: { name: string } | undefined;
       let secondaryPokemon: { name: string } | undefined;
-      let table1 = "pokemon";
-      let table2 = "pokemon";
+      const table1 = "pokemon";
+      const table2 = "pokemon";
 
       if (typeof formData.selectedDeck === "number") {
         // Meta deck: get Pokemon from meta deck data
