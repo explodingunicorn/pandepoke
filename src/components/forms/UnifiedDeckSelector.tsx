@@ -2,7 +2,6 @@
 
 import { Label } from "@/components/ui/label";
 import { PokemonSearchPicker } from "./PokemonSearchPicker";
-import { CustomDropdown } from "./CustomDropdown";
 import type { PokemonVariant } from "@/types/submission";
 
 interface UnifiedDeckSelectorProps {
@@ -14,9 +13,7 @@ interface UnifiedDeckSelectorProps {
 }
 
 export function UnifiedDeckSelector({ 
-  selectedDeck, 
   customPokemon, 
-  onDeckChange, 
   onCustomPokemonChange, 
   error 
 }: UnifiedDeckSelectorProps) {
