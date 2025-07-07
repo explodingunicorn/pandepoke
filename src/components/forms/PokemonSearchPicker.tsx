@@ -1,16 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  Box,
-  VStack,
-  HStack,
-  Text,
-  Image,
-  Button,
-  Input,
-  Badge,
-} from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { POKEMON_API_BASE, POKEMON_SEARCH_LIMIT, POKEMON_RESULTS_LIMIT, MAX_POKEMON_SELECTION, POKEMON_PER_GENERATION, SEARCH_DEBOUNCE_MS } from "@/lib/constants";
 import { getSpriteUrl } from "@/utils/pokemon";
 import type { PokemonVariant } from "@/types/submission";
@@ -37,19 +29,16 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
       setSearchResults([]);
       return;
     }
-
     setIsLoading(true);
     try {
       const response = await fetch(`${POKEMON_API_BASE}/pokemon?limit=${POKEMON_SEARCH_LIMIT}`);
       const data = await response.json();
-      
       const cosmeticVariants = [
         'rock-star', 'belle', 'popstar', 'phd', 'libre', 'cosplay',
         'battle-bond', 'ash-', 'cap', 'partner', 'spiky-eared',
         'totem', 'school', 'sunshine', 'midnight', 'dusk',
         'own-tempo', 'original-color', 'orange', 'violet'
       ];
-      
       const filteredPokemon = data.results
         .filter((pokemon: { name: string; url: string }) => {
           const name = pokemon.name.toLowerCase();
@@ -58,13 +47,11 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
           return matchesQuery && !isCosmetic;
         })
         .slice(0, POKEMON_RESULTS_LIMIT);
-
       const pokemonWithDetails = await Promise.all(
         filteredPokemon.map(async (pokemon: { name: string; url: string }) => {
           try {
             const detailResponse = await fetch(pokemon.url);
             const detail = await detailResponse.json();
-            
             return {
               name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
               pokedex_number: detail.id,
@@ -76,7 +63,6 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
           }
         })
       );
-
       setSearchResults(pokemonWithDetails.filter(Boolean).sort((a, b) => a.pokedex_number - b.pokedex_number));
     } catch {
       setSearchResults([]);
@@ -89,7 +75,6 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
     const debounceTimer = setTimeout(() => {
       searchPokemon(searchQuery);
     }, SEARCH_DEBOUNCE_MS);
-
     return () => clearTimeout(debounceTimer);
   }, [searchQuery]);
 
@@ -110,7 +95,6 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
         sprite_url: pokemon.sprite_url,
         is_competitive: false
       };
-      
       const newSelection = [...selectedPokemon, pokemonVariant];
       onPokemonChange(newSelection);
       setSearchQuery("");
@@ -124,148 +108,112 @@ export function PokemonSearchPicker({ selectedPokemon, onPokemonChange }: Pokemo
   };
 
   return (
-    <Box>
-      <Text fontSize="sm" color="black" mb={2} fontWeight="medium">
+    <div>
+      <div className="text-sm text-black mb-2 font-medium">
         Selected Pokemon ({selectedPokemon.length}/{MAX_POKEMON_SELECTION}) - Choose any Pokemon that define your deck
-      </Text>
-      
+      </div>
       {selectedPokemon.length > 0 && (
-        <VStack gap={2} mb={4}>
+        <div className="flex flex-col gap-2 mb-4">
           {selectedPokemon.map((pokemon, index) => (
-            <Box
+            <div
               key={`${pokemon.name}-${pokemon.pokedex_number}-${index}`}
-              p={3}
-              borderWidth="1px"
-              borderRadius="md"
-              bg="blue.50"
-              borderColor="blue.200"
-              width="100%"
+              className="p-3 border border-blue-200 rounded-md bg-blue-50 w-full"
             >
-              <HStack justify="space-between">
-                <HStack gap={3}>
-                  <Image
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <img
                     src={pokemon.sprite_url}
                     alt={pokemon.name}
-                    boxSize="40px"
-                    borderRadius="md"
-                    objectFit="contain"
+                    className="w-10 h-10 rounded-md object-contain"
                   />
-                  <VStack align="start" gap={0}>
-                    <Text fontWeight="medium" fontSize="sm" color="black">
-                      {pokemon.name}
-                    </Text>
-                    <HStack gap={1}>
+                  <div className="flex flex-col gap-0">
+                    <span className="font-medium text-sm text-black">{pokemon.name}</span>
+                    <div className="flex gap-1">
                       {pokemon.types.map(type => (
-                        <Badge key={type} size="xs" colorScheme="gray" variant="subtle">
+                        <span key={type} className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded">
                           {type}
-                        </Badge>
+                        </span>
                       ))}
-                    </HStack>
-                  </VStack>
-                </HStack>
+                    </div>
+                  </div>
+                </div>
                 <Button
                   size="sm"
                   variant="ghost"
-                  colorScheme="red"
                   onClick={() => handleRemovePokemon(pokemon)}
-                  fontSize="lg"
-                  minWidth="auto"
-                  height="auto"
-                  p={1}
+                  className="text-lg min-w-0 h-auto px-2 py-1 text-red-600"
                 >
                   ×
                 </Button>
-              </HStack>
-            </Box>
+              </div>
+            </div>
           ))}
-        </VStack>
+        </div>
       )}
-
       {canAddMore && (
-        <VStack gap={3} align="stretch">
+        <div className="flex flex-col gap-3">
           {selectedPokemon.length > 0 && (
-            <Text fontSize="sm" color="black" fontWeight="medium">
+            <div className="text-sm text-black font-medium">
               Add Another Pokemon ({MAX_POKEMON_SELECTION - selectedPokemon.length} remaining)
-            </Text>
+            </div>
           )}
-          
           <Input
             placeholder="🔍 Search any Pokemon by name (e.g., Roaring Moon, Pikachu)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            color="black"
-            _placeholder={{ color: "gray.500" }}
           />
-
           {isLoading && (
-            <Text fontSize="sm" color="gray.600">Searching...</Text>
+            <div className="text-sm text-gray-600">Searching...</div>
           )}
-
           {searchResults.length > 0 && (
-            <Box
-              maxHeight="200px"
-              overflowY="auto"
-              borderWidth="1px"
-              borderRadius="md"
-              p={2}
-            >
-              <VStack gap={1} align="stretch">
+            <div className="max-h-52 overflow-y-auto border border-gray-200 rounded-md p-2">
+              <div className="flex flex-col gap-1">
                 {searchResults.map((pokemon) => {
                   const selected = isSelected(pokemon);
-                  
                   return (
                     <Button
                       key={`${pokemon.name}-${pokemon.pokedex_number}`}
                       variant="ghost"
                       size="sm"
-                      justifyContent="flex-start"
                       onClick={() => handleAddPokemon(pokemon)}
                       disabled={selected}
-                      bg={selected ? "gray.100" : "transparent"}
-                      _hover={{ bg: selected ? "gray.100" : "gray.50" }}
-                      height="auto"
-                      py={2}
+                      className={`justify-start h-auto py-2 ${selected ? "bg-gray-100" : ""}`}
                     >
-                      <HStack gap={3} width="100%">
-                        <Image
+                      <div className="flex items-center gap-3 w-full">
+                        <img
                           src={pokemon.sprite_url}
                           alt={pokemon.name}
-                          boxSize="32px"
-                          borderRadius="md"
-                          objectFit="contain"
+                          className="w-8 h-8 rounded-md object-contain"
                         />
-                        <VStack align="start" gap={0} flex={1}>
-                          <Text fontSize="sm" fontWeight="medium" textAlign="left" color="black">
+                        <div className="flex flex-col gap-0 flex-1">
+                          <span className="text-sm font-medium text-left text-black">
                             {pokemon.name} (#{pokemon.pokedex_number})
-                          </Text>
-                          <HStack gap={1}>
+                          </span>
+                          <div className="flex gap-1">
                             {pokemon.types.map(type => (
-                              <Badge key={type} size="xs" colorScheme="gray" variant="subtle">
+                              <span key={type} className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded">
                                 {type}
-                              </Badge>
+                              </span>
                             ))}
-                          </HStack>
-                        </VStack>
+                          </div>
+                        </div>
                         {selected && (
-                          <Badge colorScheme="blue" variant="solid" size="xs">
-                            Selected
-                          </Badge>
+                          <span className="inline-block bg-blue-500 text-white text-xs px-2 py-0.5 rounded">Selected</span>
                         )}
-                      </HStack>
+                      </div>
                     </Button>
                   );
                 })}
-              </VStack>
-            </Box>
+              </div>
+            </div>
           )}
-
           {searchQuery.length >= 3 && searchResults.length === 0 && !isLoading && (
-            <Text fontSize="sm" color="gray.600" textAlign="center" py={2}>
+            <div className="text-sm text-gray-600 text-center py-2">
               No Pokemon found matching &quot;{searchQuery}&quot;. Try a different search term.
-            </Text>
+            </div>
           )}
-        </VStack>
+        </div>
       )}
-    </Box>
+    </div>
   );
 }

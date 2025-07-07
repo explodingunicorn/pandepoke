@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Box,
-  VStack,
-  Text,
-} from "@chakra-ui/react";
+import { Label } from "@/components/ui/label";
 import { PokemonSearchPicker } from "./PokemonSearchPicker";
 import { CustomDropdown } from "./CustomDropdown";
 import type { PokemonVariant } from "@/types/submission";
@@ -24,35 +20,18 @@ export function UnifiedDeckSelector({
   onCustomPokemonChange, 
   error 
 }: UnifiedDeckSelectorProps) {
-
-
   return (
-    <Box>
-      <Text fontSize="sm" fontWeight="medium" mb={3} color={error ? "red.500" : "black"}>
-        Deck Selection *
-      </Text>
-      
-      <VStack gap={4} align="stretch">
-        {/* Custom Dropdown with Pokemon Images */}
-        <CustomDropdown
-          selectedDeck={selectedDeck}
-          onDeckChange={onDeckChange}
-          error={error}
+    <div>
+      <Label className={`mb-3 ${error ? "text-red-500" : "text-black"}`}>Deck Selection *</Label>
+      <div className="flex flex-col gap-4">
+        <PokemonSearchPicker
+          selectedPokemon={customPokemon || []}
+          onPokemonChange={onCustomPokemonChange}
         />
-
-
-        {/* Pokemon Search Picker */}
-        {selectedDeck === "other" && (
-          <PokemonSearchPicker
-            selectedPokemon={customPokemon || []}
-            onPokemonChange={onCustomPokemonChange}
-          />
-        )}
-      </VStack>
-      
+      </div>
       {error && (
-        <Text color="red.500" fontSize="xs" mt={2}>{error}</Text>
+        <span className="text-red-500 text-xs mt-2 block">{error}</span>
       )}
-    </Box>
+    </div>
   );
 }

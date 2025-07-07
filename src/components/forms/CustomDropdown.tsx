@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Box,
-  VStack,
-  HStack,
-  Text,
-  Image,
-  Button,
-} from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
 import { getSpriteUrl } from "@/utils/pokemon";
 import metaDecksData from "@/data/meta-decks.json";
 import type { MetaDeck } from "@/types/submission";
@@ -24,9 +17,7 @@ export function CustomDropdown({ selectedDeck, onDeckChange, error }: CustomDrop
   const [metaDecks] = useState<MetaDeck[]>(metaDecksData.metaDecks);
 
   const getSelectedDisplayText = (): string => {
-    if (selectedDeck === "other") {
-      return "Other (Custom Deck)";
-    }
+    if (selectedDeck === "other") return "Other (Custom Deck)";
     if (typeof selectedDeck === "number") {
       const deck = metaDecks.find(d => d.id === selectedDeck);
       return deck ? deck.name : "";
@@ -40,132 +31,60 @@ export function CustomDropdown({ selectedDeck, onDeckChange, error }: CustomDrop
   };
 
   return (
-    <Box position="relative">
+    <div className="relative">
       <Button
         variant="outline"
-        width="100%"
-        justifyContent="space-between"
+        className={`w-full flex justify-between items-center text-left font-normal text-base px-4 py-3 min-h-[48px] ${error ? "border-red-500" : "border-gray-200"}`}
         onClick={() => setIsOpen(!isOpen)}
-        borderColor={error ? "red.500" : "gray.200"}
-        bg="white"
-        color="black"
-        textAlign="left"
-        fontWeight="normal"
-        fontSize="16px"
-        px={4}
-        py={3}
-        height="auto"
-        minHeight="48px"
+        type="button"
       >
-        <Text>{getSelectedDisplayText()}</Text>
-        <Text>{isOpen ? "▲" : "▼"}</Text>
+        <span>{getSelectedDisplayText()}</span>
+        <span>{isOpen ? "▲" : "▼"}</span>
       </Button>
-
       {isOpen && (
-        <Box
-          position="absolute"
-          bottom="100%"
-          left={0}
-          right={0}
-          bg="white"
-          borderWidth="1px"
-          borderColor="gray.200"
-          borderRadius="md"
-          boxShadow="lg"
-          zIndex={1000}
-          maxHeight="400px"
-          overflowY="auto"
-        >
-          <VStack gap={0} align="stretch">
-            <Button
-              variant="ghost"
-              width="100%"
-              height="auto"
-              py={4}
-              px={4}
-              justifyContent="flex-start"
-              onClick={() => handleOptionClick("")}
-              bg={selectedDeck === "" ? "blue.50" : "transparent"}
-              _hover={{ bg: "gray.50" }}
-              borderRadius={0}
-              fontWeight="normal"
-              color="black"
-              minHeight="56px"
+        <div className="absolute left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-96 overflow-y-auto mt-1">
+          <button
+            className={`w-full text-left px-4 py-4 text-base ${selectedDeck === "" ? "bg-blue-50" : ""} hover:bg-gray-50`}
+            onClick={() => handleOptionClick("")}
+            type="button"
+          >
+            Select your deck...
+          </button>
+          {metaDecks.filter(deck => deck.is_active).sort((a, b) => a.rank - b.rank).map((deck) => (
+            <button
+              key={deck.id}
+              className={`w-full text-left px-4 py-4 text-base flex items-center gap-4 ${selectedDeck === deck.id ? "bg-blue-50" : ""} hover:bg-gray-50`}
+              onClick={() => handleOptionClick(deck.id)}
+              type="button"
             >
-              <Text fontSize="16px">Select your deck...</Text>
-            </Button>
-
-            {metaDecks
-              .filter(deck => deck.is_active)
-              .sort((a, b) => a.rank - b.rank)
-              .map((deck) => (
-                <Button
-                  key={deck.id}
-                  variant="ghost"
-                  width="100%"
-                  height="auto"
-                  py={4}
-                  px={4}
-                  justifyContent="flex-start"
-                  onClick={() => handleOptionClick(deck.id)}
-                  bg={selectedDeck === deck.id ? "blue.50" : "transparent"}
-                  _hover={{ bg: "gray.50" }}
-                  borderRadius={0}
-                  fontWeight="normal"
-                  minHeight="56px"
-                >
-                  <HStack gap={4} width="100%">
-                    <HStack gap={2}>
-                      {deck.pokemon.slice(0, 2).map((pokemon, index) => (
-                        <Image
-                          key={`${pokemon.pokedex_number}-${index}`}
-                          src={getSpriteUrl(pokemon.pokedex_number)}
-                          alt={pokemon.name}
-                          boxSize="32px"
-                          objectFit="contain"
-                        />
-                      ))}
-                    </HStack>
-                    <Text fontSize="16px" color="black" textAlign="left">
-                      {deck.name}
-                    </Text>
-                  </HStack>
-                </Button>
-              ))}
-
-            <Button
-              variant="ghost"
-              width="100%"
-              height="auto"
-              py={4}
-              px={4}
-              justifyContent="flex-start"
-              onClick={() => handleOptionClick("other")}
-              bg={selectedDeck === "other" ? "blue.50" : "transparent"}
-              _hover={{ bg: "gray.50" }}
-              borderRadius={0}
-              fontWeight="normal"
-              borderTop="1px solid"
-              borderColor="gray.200"
-              minHeight="56px"
-            >
-              <Text fontSize="16px" color="black">Other (Custom Deck)</Text>
-            </Button>
-          </VStack>
-        </Box>
+              <span className="flex gap-2">
+                {deck.pokemon.slice(0, 2).map((pokemon, index) => (
+                  <img
+                    key={`${pokemon.pokedex_number}-${index}`}
+                    src={getSpriteUrl(pokemon.pokedex_number)}
+                    alt={pokemon.name}
+                    className="w-8 h-8 object-contain"
+                  />
+                ))}
+              </span>
+              <span className="text-black">{deck.name}</span>
+            </button>
+          ))}
+          <button
+            className={`w-full text-left px-4 py-4 text-base border-t border-gray-200 ${selectedDeck === "other" ? "bg-blue-50" : ""} hover:bg-gray-50`}
+            onClick={() => handleOptionClick("other")}
+            type="button"
+          >
+            Other (Custom Deck)
+          </button>
+        </div>
       )}
-
       {isOpen && (
-        <Box
-          position="fixed"
-          top={0}
-          left={0}
-          width="100vw"
-          height="100vh"
-          zIndex={999}
+        <div
+          className="fixed inset-0 z-40"
           onClick={() => setIsOpen(false)}
         />
       )}
-    </Box>
+    </div>
   );
 }
