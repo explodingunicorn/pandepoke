@@ -41,8 +41,7 @@ export interface SubmissionFormData {
   wins: number;
   losses: number;
   ties: number;
-  selectedDeck: number | "other" | "";
-  customPokemon?: PokemonVariant[];
+  customPokemon: PokemonVariant[];
   password: string;
 }
 

@@ -5,10 +5,8 @@ import { PokemonSearchPicker } from "./PokemonSearchPicker";
 import type { PokemonVariant } from "@/types/submission";
 
 interface UnifiedDeckSelectorProps {
-  selectedDeck: number | "other" | "";
   customPokemon?: PokemonVariant[];
-  onDeckChange: (deck: number | "other" | "") => void;
-  onCustomPokemonChange: (pokemon?: PokemonVariant[]) => void;
+  onCustomPokemonChange: (pokemon: PokemonVariant[]) => void;
   error?: string;
 }
 

@@ -97,17 +97,7 @@ export function useSubmitRecord() {
       const table1 = "pokemon";
       const table2 = "pokemon";
 
-      if (typeof formData.selectedDeck === "number") {
-        // Meta deck: get Pokemon from meta deck data
-        const metaDecksModule = await import("@/data/meta-decks.json");
-        const metaDeck = metaDecksModule.metaDecks.find(deck => deck.id === formData.selectedDeck);
-        if (!metaDeck) {
-          return { error: "Selected meta deck not found" };
-        }
-        primaryPokemon = metaDeck.pokemon[0];
-        secondaryPokemon = metaDeck.pokemon[1];
-        // Both lookups use "pokemon" table
-      } else if (formData.selectedDeck === "other" && formData.customPokemon) {
+      if (formData.customPokemon) {
         // Custom deck: get Pokemon from form
         primaryPokemon = formData.customPokemon[0];
         secondaryPokemon = formData.customPokemon[1];

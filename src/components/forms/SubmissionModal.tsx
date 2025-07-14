@@ -22,7 +22,7 @@ export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
     wins: 0,
     losses: 0,
     ties: 0,
-    selectedDeck: "",
+    customPokemon: [],
     password: '',
   });
   const [displayWins, setDisplayWins] = useState<string>("");
@@ -56,8 +56,7 @@ export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
     if (formData.ties < 0) newErrors.ties = "Ties cannot be negative";
     const totalGames = formData.wins + formData.losses + formData.ties;
     if (totalGames === 0) newErrors.general = "You must have played at least one game";
-    if (!formData.selectedDeck) newErrors.deck = "Please select a deck";
-    if (formData.selectedDeck === "other" && (!formData.customPokemon || formData.customPokemon.length === 0)) {
+    if ((!formData.customPokemon || formData.customPokemon.length === 0)) {
       newErrors.deck = "Please select at least one Pokemon that defines your custom deck";
     }
     if (!formData.password || formData.password.trim().length === 0) {
@@ -81,7 +80,7 @@ export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
           wins: 0,
           losses: 0,
           ties: 0,
-          selectedDeck: "",
+          customPokemon: [],
           password: "",
         });
         setDisplayWins("");
@@ -236,13 +235,7 @@ export function SubmissionModal({ isOpen, onClose }: SubmissionModalProps) {
           </div>
           <div className="mb-4">
             <UnifiedDeckSelector
-              selectedDeck={formData.selectedDeck}
               customPokemon={formData.customPokemon}
-              onDeckChange={(selectedDeck) => setFormData(prev => ({ 
-                ...prev, 
-                selectedDeck,
-                customPokemon: selectedDeck === "other" ? prev.customPokemon : undefined 
-              }))}
               onCustomPokemonChange={(customPokemon) => setFormData(prev => ({ ...prev, customPokemon }))}
               error={errors.deck}
             />
