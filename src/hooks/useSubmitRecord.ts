@@ -80,10 +80,11 @@ export function useSubmitRecord() {
     try {
       // Helper to fetch Pokemon ID from a table by name
       const fetchPokemonId = async (table: string, name: string) => {
+        
         const { data, error } = await supabase
           .from(table)
-          .select('Number, Name')
-          .eq('Name', name)
+          .select('Number, formatted_name')
+          .eq('formatted_name', name.toLowerCase())
           .single();
         if (error) {
           console.error(`Error finding Pokemon "${name}" in table "${table}":`, error);
